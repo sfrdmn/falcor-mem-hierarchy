@@ -6,8 +6,8 @@ var expandValues = require('./util/expand-values')
 var stripModelMeta = require('./util/strip-model-meta')
 var after = require('./util/after')
 
-var HierarchicalDataSource = require('..')
-var errorCodes = HierarchicalDataSource.errorCodes
+var MemHierarchyDataSource = require('..')
+var errorCodes = MemHierarchyDataSource.errorCodes
 
 test('set operations give expected response', function (t) {
   t.plan(1)
@@ -50,7 +50,7 @@ test('set operations update both the cache and the remote', function (t) {
   var initialData = {byId: {0: {name: 'Sean Fridman'}}}
   var cache = datasource(initialData)
   var source = datasource(initialData)
-  var tieredSource = new HierarchicalDataSource(cache, source)
+  var tieredSource = new MemHierarchyDataSource(cache, source)
   var error = errorHandler(t)
   var expected = {
     byId: {0: {name: 'Sean "The Crusher" Fridman'}}
@@ -91,7 +91,7 @@ test('set operations are transactional when the failure point is upstream', func
       })
     }
   }
-  var tieredSource = new HierarchicalDataSource(cache, source)
+  var tieredSource = new MemHierarchyDataSource(cache, source)
   var error = errorHandler(t)
 
   setData(assertExpected)
@@ -134,7 +134,7 @@ test('set on faulty cache still goes through to upstream', function (t) {
     }
   }
   var source = datasource(expected)
-  var tieredSource = new HierarchicalDataSource(cache, source)
+  var tieredSource = new MemHierarchyDataSource(cache, source)
   var error = errorHandler(t)
 
   setData(assertExpected)
@@ -166,7 +166,7 @@ test('set on faulty cache still goes through to upstream', function (t) {
 })
 
 function reconciled (data) {
-  return new HierarchicalDataSource(
+  return new MemHierarchyDataSource(
     datasource(data), datasource(data))
 }
 

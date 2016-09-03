@@ -1,1 +1,1 @@
-module.exports = require('./lib/hierarchical-data-source')
+module.exports = require('./lib/mem-hierarchy')

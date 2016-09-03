@@ -7,15 +7,15 @@ var Observable = require('rx').Observable
 var expandValues = require('./util/expand-values')
 var stripMeta = require('./util/strip-model-meta')
 
-var HierarchicalDataSource = require('..')
-var errorCodes = HierarchicalDataSource.errorCodes
+var MemHierarchyDataSource = require('..')
+var errorCodes = MemHierarchyDataSource.errorCodes
 
 test('call response is sane', function (t) {
   t.plan(1)
   var sources = sourcePair()
   var cache = sources[0]
   var source = sources[1]
-  var tieredSource = new HierarchicalDataSource(cache, source)
+  var tieredSource = new MemHierarchyDataSource(cache, source)
   var error = errorHandler(t)
 
   tieredSource.call(['chumps', 'push'], [$ref(['usersById', 3])], ['name'], ['length'])
@@ -39,7 +39,7 @@ test('calls which mutate the source mutate the cache', function (t) {
   var sources = sourcePair()
   var cache = sources[0]
   var source = sources[1]
-  var tieredSource = new HierarchicalDataSource(cache, source)
+  var tieredSource = new MemHierarchyDataSource(cache, source)
   var error = errorHandler(t)
 
   pushRef(assertCacheUpdated)
@@ -69,7 +69,7 @@ test('upstream failure throws error', function (t) {
       })
     }
   }
-  var tieredSource = new HierarchicalDataSource(cache, source)
+  var tieredSource = new MemHierarchyDataSource(cache, source)
 
   tieredSource.call(['chumps', 'push'], [$ref('usersById[3]')]).subscribe(function (envelope) {
     t.fail('source failure did not throw an error')
@@ -89,7 +89,7 @@ test('cache errors are handled robustly', function (t) {
     }
   }
   var source = sourcePair()[1]
-  var tieredSource = new HierarchicalDataSource(cache, source)
+  var tieredSource = new MemHierarchyDataSource(cache, source)
   var error = errorHandler(t)
 
   tieredSource.cacheErrors().subscribe(function (err) {

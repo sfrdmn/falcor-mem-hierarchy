@@ -1,7 +1,7 @@
 {
-  "name": "hierarchical-data-source",
+  "name": "falcor-mem-hierarchy",
   "version": "0.1.0",
-  "description": "Falcor DataSource for creating cache hierarchies",
+  "description": "Chain Falcor DataSources as a memory hierarchy",
   "main": "index.js",
   "scripts": {
     "test": "tape test/*.spec.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sfrdmn/falcor-hierarchical-datasource.git"
+    "url": "git+https://github.com/sfrdmn/falcor-mem-hierarchy.git"
   },
   "keywords": [
     "falcor",
@@ -21,9 +21,9 @@
   "author": "Sean Fridman",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sfrdmn/falcor-hierarchical-datasource/issues"
+    "url": "https://github.com/sfrdmn/falcor-mem-hierarchy/issues"
   },
-  "homepage": "https://github.com/sfrdmn/falcor-hierarchical-datasource#readme",
+  "homepage": "https://github.com/sfrdmn/falcor-mem-hierarchy#readme",
   "dependencies": {
     "es6-promise": "^3.2.1",
     "falcor-json-graph": "^1.1.7",

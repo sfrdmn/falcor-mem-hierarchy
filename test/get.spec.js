@@ -11,8 +11,8 @@ var get = require('./util/get')
 var after = require('./util/after')
 var callAfter = require('./util/call-after')
 
-var HierarchicalDataSource = require('..')
-var errorCodes = HierarchicalDataSource.errorCodes
+var MemHierarchyDataSource = require('..')
+var errorCodes = MemHierarchyDataSource.errorCodes
 
 test('model integration is sane for gets', function (t) {
   t.plan(2)
@@ -22,7 +22,7 @@ test('model integration is sane for gets', function (t) {
   })
   var source = datasource({})
   var model = new falcor.Model({
-    source: new HierarchicalDataSource(cache, source)
+    source: new MemHierarchyDataSource(cache, source)
   })
 
   getSingleVal(getMultiVals)
@@ -54,7 +54,7 @@ test('data source understands ranges and complex ranges', function (t) {
                                  24: {msg: 'get outta here'}}})
   var source = datasource({byId: {1: {msg: 'hello!'},
                                     2: {msg: 'hello!!!'}}})
-  var cachedSource = new HierarchicalDataSource(cache, source)
+  var cachedSource = new MemHierarchyDataSource(cache, source)
 
   fetchRange(fetchComplexRange)
 
@@ -91,7 +91,7 @@ test('returned graph envelope paths are sane', function (t) {
                                       favoriteColor: $error('nada')}}})
   var source = datasource({byId: {23: {favoriteColor: 'light blue',
                                        orientation: 'demonic'}}})
-  var cachedSource = new HierarchicalDataSource(cache, source)
+  var cachedSource = new MemHierarchyDataSource(cache, source)
   var pathSets = [['byId', 0, 'orientation'],
                   ['byId', 23, 'favoriteColor'],
                   ['byId', 23, 'orientation']]
@@ -109,7 +109,7 @@ test('cache hits overshadow upstream', function (t) {
   var cache = datasource({byId: {0: {name: 'juju beans',
                                      age: $error('nope')}}})
   var source = datasource({byId: {0: {name: 'timbuktu', age: 'thousands of years'}}})
-  var cachedSource = new HierarchicalDataSource(cache, source)
+  var cachedSource = new MemHierarchyDataSource(cache, source)
   cachedSource.get([['byId', 0, ['name', 'age']]]).subscribe(function (result) {
     t.deepEqual(expandValues(result.jsonGraph), {
       byId: {0: {name: 'juju beans',
@@ -124,7 +124,7 @@ test('handles unmaterialized paths', function (t) {
   t.plan(3)
   var cache = datasource({byId: {0: {name: 'Bobob', occupation: $error('ionno')}}})
   var source = datasource({byId: {0: {age: 3000}}})
-  var cachedSource = new HierarchicalDataSource(cache, source)
+  var cachedSource = new MemHierarchyDataSource(cache, source)
 
   checkCache(checkUpstream)
 
@@ -165,7 +165,7 @@ test('expired values don\'t overshadow source', function (t) {
     $expires: expiration
   })}}})
   var source = datasource({byId: {0: {name: 'Bobob Jr'}}})
-  var cachedSource = new HierarchicalDataSource(cache, source)
+  var cachedSource = new MemHierarchyDataSource(cache, source)
   var pathSets = [['byId', 0, 'name']]
 
   reqInitial(reqAfterExpired(assertUnique))
@@ -211,7 +211,7 @@ test('cache failure does not break everything', function (t) {
     set: function () { return Observable.create(function () {}) }
   }
   var source = datasource({byId: {0: {message: 'hello beautiful'}}})
-  var cachedSource = new HierarchicalDataSource(cache, source)
+  var cachedSource = new MemHierarchyDataSource(cache, source)
   var cacheErrors = cachedSource.cacheErrors()
   var pathSets = [['byId', 0, 'message']]
   cachedSource.get(pathSets).subscribe(function (envelope) {
@@ -236,7 +236,7 @@ test('source failure throws an error', function (t) {
       })
     }
   }
-  var cachedSource = new HierarchicalDataSource(cache, source)
+  var cachedSource = new MemHierarchyDataSource(cache, source)
   cachedSource.get([['byId', 1, 'message']]).subscribe(function () {
     t.fail('expected data source to throw error')
   }, function (err) {
@@ -254,8 +254,8 @@ test('stale cache updates after upstream fetch', function (t) {
   var source = datasource({byId: {0: {name: 'Julie',
     age: 27}}})
   var unmaterialized = datasource({})
-  var cachedSource = new HierarchicalDataSource(cache, source)
-  var cacheOnly = new HierarchicalDataSource(cache, unmaterialized)
+  var cachedSource = new MemHierarchyDataSource(cache, source)
+  var cacheOnly = new MemHierarchyDataSource(cache, unmaterialized)
   var pathSets = [['byId', 0, ['name', 'age']]]
 
   fetchCached(missAndFetchUpstream(ensureCacheUpdated))
